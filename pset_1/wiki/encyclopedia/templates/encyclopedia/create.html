@@ -1,0 +1,16 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title%}
+    Create Encyclopeida
+{% endblock %}
+
+{% block body %}
+    <h1>Create Encyclopedia</h1><br><br>
+    
+    <form action="">
+        {{ title }}
+        <input type="text" id="n" placeholder="Enter a title"><br><br>
+        <textarea name="markdown" id="m" cols="15" rows="8" placeholder="Enter the Markdown content for the page"></textarea><br>
+        <button type="submit">Create</button>
+    </form>
+{% endblock %}
