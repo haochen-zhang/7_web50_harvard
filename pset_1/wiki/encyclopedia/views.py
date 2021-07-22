@@ -1,8 +1,12 @@
 from django.shortcuts import render
-
+from django import forms
 from . import util
-import random
+import random, string
+from django.utils.safestring import mark_safe
 
+class CreateForm(forms.Form):
+    titles = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Title'}))
+    markdown = forms.CharField(label='', widget=forms.Textarea(attrs={'placeholder': 'Please enter the markdown of encyclopdia.'}))
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -33,7 +37,11 @@ def search(request):
         })
 
 def create(request):
-    return render(request, "encyclopedia/create.html")
+    if request.method == "POST":
+        
+    return render(request, "encyclopedia/create.html", {
+        "form" : CreateForm()
+    })
 
 def rand(request):
     random_title = random.choice(util.list_entries())
