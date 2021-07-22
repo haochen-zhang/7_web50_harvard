@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from . import util
+import random
 
 
 def index(request):
@@ -35,4 +36,8 @@ def create(request):
     return render(request, "encyclopedia/create.html")
 
 def rand(request):
-    pass
+    random_title = random.choice(util.list_entries())
+    return render(request, "encyclopedia/entry.html", {
+            "title": random_title,
+            "entry_content": util.get_entry(random_title)
+    })
