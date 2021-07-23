@@ -3,6 +3,8 @@ from django import forms
 from . import util
 import random, string
 from django.utils.safestring import mark_safe
+import markdown2
+
 
 class CreateForm(forms.Form):
     titles = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Title'}))
@@ -16,7 +18,7 @@ def index(request):
 def entry(request, title):
     return render(request, "encyclopedia/entry.html", {
         "title": title,
-        "entry_content": util.get_entry(title)
+        "entry_content": markdown2.markdown(util.get_entry(title))
     })
 
 def search(request):
@@ -38,7 +40,23 @@ def search(request):
 
 def create(request):
     if request.method == "POST":
-        
+        form = CreateForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["titles"]
+            content = form.cleaned_data["markdown"]
+
+            if title in util.list_entries():
+                error = "The title has already existed."
+                return render(request, "encyclopedia/create.html", {
+                    "form" : CreateForm(),
+                    "error" : error
+                })
+            else:
+                util.save_entry(title, content)
+                return render(request, "encyclopedia/index.html", {
+                        "entries": util.list_entries()
+                })
+                
     return render(request, "encyclopedia/create.html", {
         "form" : CreateForm()
     })

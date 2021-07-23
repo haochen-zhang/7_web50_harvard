@@ -10,6 +10,8 @@
     <form action="{% url 'create' %}" method="POST">
         {% csrf_token %}
         {{ form.titles | linebreaks }}
+        {{ error }}
+        <br>
         {{ form.markdown }}
         <br><br>
         <button type="submit">Create</button>
