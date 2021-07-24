@@ -56,7 +56,7 @@ def create(request):
                 return render(request, "encyclopedia/index.html", {
                         "entries": util.list_entries()
                 })
-                
+
     return render(request, "encyclopedia/create.html", {
         "form" : CreateForm()
     })
@@ -64,6 +64,22 @@ def create(request):
 def rand(request):
     random_title = random.choice(util.list_entries())
     return render(request, "encyclopedia/entry.html", {
-            "title": random_title,
-            "entry_content": util.get_entry(random_title)
+        "title": random_title,
+        "entry_content": util.get_entry(random_title)
+    })
+
+def edit(request, title):
+    if request.method == 'POST':
+        form = CreateForm(request.POST)
+        if form.is_valid:
+            content = form['markdown'].value()
+            util.save_entry(title, content)
+            return render(request, "encyclopedia/index.html", {
+                    "entries": util.list_entries(),
+            })
+
+    form = CreateForm(initial={'markdown': util.get_entry(title)})
+    return render(request, "encyclopedia/edit.html", {
+        "title": title,
+        "form": form
     })
